@@ -29,7 +29,7 @@ export function useDiaries(userId?: number) {
   console.log('[useDiaries] userId 확인:', { userId, currentUserId, targetUserId });
 
   const query = useQuery({
-    queryKey: diaryKeys.list(targetUserId), // 로그인한 사용자의 ID 사용
+    queryKey: targetUserId ? diaryKeys.list(targetUserId) : diaryKeys.lists(), // userId가 있을 때만 사용
     queryFn: async () => {
       if (!targetUserId) {
         console.warn('[useDiaries] userId가 없어 빈 배열 반환');
