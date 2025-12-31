@@ -27,12 +27,16 @@ export const createCultureSlice: StateCreator<
   cultureView: 'home',
 
   // 액션
-  setCultureView: (view) => set((state) => ({
-    culture: { ...state.culture, cultureView: view }
-  })),
+  setCultureView: (view) => {
+    set((state) => ({
+      culture: { ...(state as any).culture, cultureView: view }
+    } as Partial<AppStore>));
+  },
   
-  resetCultureView: () => set((state) => ({
-    culture: { ...state.culture, cultureView: 'home' }
-  })),
+  resetCultureView: () => {
+    set((state) => ({
+      culture: { ...(state as any).culture, cultureView: 'home' }
+    } as Partial<AppStore>));
+  },
 });
 
