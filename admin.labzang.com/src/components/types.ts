@@ -47,6 +47,8 @@ export interface Transaction {
   totalAmount: number;
 }
 
+export type AccountView = 'home' | 'data' | 'daily' | 'monthly' | 'income' | 'tax';
+
 // Web Speech API 타입 정의
 export interface SpeechRecognition extends EventTarget {
   continuous: boolean;
