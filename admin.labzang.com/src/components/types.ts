@@ -57,6 +57,8 @@ export type HealthView = 'home' | 'exercise' | 'health' | 'records' | 'scan' | '
 
 export type PathfinderView = 'home' | 'learning' | 'new-learning' | 'career' | 'roadmap';
 
+export type SettingsView = 'home' | 'profile';
+
 // Web Speech API 타입 정의
 export interface SpeechRecognition extends EventTarget {
   continuous: boolean;
