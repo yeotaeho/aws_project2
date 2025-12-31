@@ -53,6 +53,8 @@ export type CultureView = 'home' | 'travel' | 'movie' | 'performance' | 'records
 
 export type DiaryView = 'home' | 'write' | 'list' | 'detail' | 'analysis';
 
+export type HealthView = 'home' | 'exercise' | 'health' | 'records' | 'scan' | 'exercise-detail';
+
 // Web Speech API 타입 정의
 export interface SpeechRecognition extends EventTarget {
   continuous: boolean;
