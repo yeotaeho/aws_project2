@@ -4,3 +4,6 @@
 [submodule "api.labzang.com"]
 	path = api.labzang.com
 	url = https://github.com/yeotaeho/aws_api2.git
+[submodule "mlservice.labzang.com"]
+	path = mlservice.labzang.com
+	url = https://github.com/yeotaeho/aws_chat2.git
