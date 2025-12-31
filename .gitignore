@@ -1,3 +1,6 @@
+<<<<<<< HEAD
+# Python
+=======
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
@@ -41,11 +44,43 @@ yarn-error.log*
 next-env.d.ts
 
 # python
+>>>>>>> eab182684db4fd1a8541c7d1d7a707c62960ab6f
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
+<<<<<<< HEAD
+env/
+venv/
+ENV/
+.venv
+
+# Model cache
+app/.hf_cache/
+*.safetensors
+*.bin
+*.pt
+*.pth
+
+# Data files
+*.csv
+*.xls
+*.xlsx
+*.json
+*.pkl
+*.h5
+
+# Images (except source code)
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.bmp
+*.webp
+!app/yolo/*.py
+!app/opencv/*.py
+=======
 *.egg-info/
 dist/
 build/
@@ -55,6 +90,7 @@ htmlcov/
 
 # docker
 *.log
+>>>>>>> eab182684db4fd1a8541c7d1d7a707c62960ab6f
 
 # IDE
 .vscode/
@@ -67,6 +103,20 @@ htmlcov/
 .DS_Store
 Thumbs.db
 
+<<<<<<< HEAD
+# Logs
+*.log
+
+# Environment
+.env
+.env.local
+
+# Build
+build/
+dist/
+*.egg-info/
+
+=======
 # Generated files
 *.png
 *.jpg
@@ -120,3 +170,4 @@ ai.labzang.com/mlservice/app/seoul_crime/save/*.png
 # OS
 .DS_Store
 Thumbs.db
+>>>>>>> eab182684db4fd1a8541c7d1d7a707c62960ab6f
