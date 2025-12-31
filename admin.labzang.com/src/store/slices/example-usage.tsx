@@ -56,7 +56,7 @@ export function ExampleSoccerUsage() {
         {isLoading ? '검색 중...' : '축구 검색'}
       </button>
       {error && <p>에러: {error}</p>}
-      {searchResults && (
+      {searchResults != null && (
         <div>
           <h3>검색 결과</h3>
           <pre>{JSON.stringify(searchResults, null, 2)}</pre>
@@ -191,7 +191,9 @@ export function ExampleMultipleSlices() {
       <button onClick={toggleDarkMode}>다크모드 토글</button>
       <button onClick={() => searchSoccer("축구")}>축구 검색</button>
       <button onClick={() => setDiaryView('write')}>일기 쓰기</button>
-      {searchResults && <div>검색 결과 있음</div>}
+      {searchResults != null && (
+        <div>검색 결과 있음</div>
+      )}
       <p>일정: {events.length}개</p>
     </div>
   );
