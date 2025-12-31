@@ -1,9 +1,9 @@
-[submodule "yolo"]
-	path = yolo
-	url = https://github.com/yeotaeho/aws_yolo2.git
 [submodule "api.labzang.com"]
 	path = api.labzang.com
 	url = https://github.com/yeotaeho/aws_api2.git
 [submodule "mlservice.labzang.com"]
 	path = mlservice.labzang.com
 	url = https://github.com/yeotaeho/aws_chat2.git
+[submodule "vision.labzang.com"]
+	path = vision.labzang.com
+	url = https://github.com/yeotaeho/aws_vision.git
