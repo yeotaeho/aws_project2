@@ -33,23 +33,31 @@ export const createInteractionSlice: StateCreator<
   interactions: [],
 
   // 액션
-  setInputText: (text) => set((state) => ({
-    interaction: { ...state.interaction, inputText: text }
-  })),
+  setInputText: (text) => {
+    set((state) => ({
+      interaction: { ...state.interaction, inputText: text }
+    } as Partial<AppStore>));
+  },
 
-  setLoading: (loading) => set((state) => ({
-    interaction: { ...state.interaction, loading }
-  })),
+  setLoading: (loading) => {
+    set((state) => ({
+      interaction: { ...state.interaction, loading }
+    } as Partial<AppStore>));
+  },
 
-  addInteraction: (interaction) => set((state) => ({
-    interaction: {
-      ...state.interaction,
-      interactions: [...state.interaction.interactions, interaction]
-    }
-  })),
+  addInteraction: (interaction) => {
+    set((state) => ({
+      interaction: {
+        ...state.interaction,
+        interactions: [...state.interaction.interactions, interaction]
+      }
+    } as Partial<AppStore>));
+  },
 
-  clearInteractions: () => set((state) => ({
-    interaction: { ...state.interaction, interactions: [] }
-  })),
+  clearInteractions: () => {
+    set((state) => ({
+      interaction: { ...state.interaction, interactions: [] }
+    } as Partial<AppStore>));
+  },
 });
 

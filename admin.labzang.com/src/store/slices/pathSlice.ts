@@ -27,12 +27,16 @@ export const createPathSlice: StateCreator<
   pathfinderView: 'home',
 
   // 액션
-  setPathfinderView: (view) => set((state) => ({
-    path: { ...state.path, pathfinderView: view }
-  })),
+  setPathfinderView: (view) => {
+    set((state) => ({
+      path: { ...(state as any).path, pathfinderView: view }
+    } as Partial<AppStore>));
+  },
   
-  resetPathfinderView: () => set((state) => ({
-    path: { ...state.path, pathfinderView: 'home' }
-  })),
+  resetPathfinderView: () => {
+    set((state) => ({
+      path: { ...(state as any).path, pathfinderView: 'home' }
+    } as Partial<AppStore>));
+  },
 });
 

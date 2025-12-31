@@ -33,28 +33,38 @@ export const createAvatarSlice: StateCreator<
   micAvailable: false,
 
   // 액션
-  setAvatarMode: (mode) => set((state) => ({
-    avatar: { ...state.avatar, avatarMode: mode }
-  })),
+  setAvatarMode: (mode) => {
+    set((state) => ({
+      avatar: { ...state.avatar, avatarMode: mode }
+    } as Partial<AppStore>));
+  },
 
-  setIsListening: (listening) => set((state) => ({
-    avatar: { ...state.avatar, isListening: listening }
-  })),
+  setIsListening: (listening) => {
+    set((state) => ({
+      avatar: { ...state.avatar, isListening: listening }
+    } as Partial<AppStore>));
+  },
 
-  setMicAvailable: (available) => set((state) => ({
-    avatar: { ...state.avatar, micAvailable: available }
-  })),
+  setMicAvailable: (available) => {
+    set((state) => ({
+      avatar: { ...state.avatar, micAvailable: available }
+    } as Partial<AppStore>));
+  },
 
-  toggleAvatarMode: () => set((state) => ({
-    avatar: { ...state.avatar, avatarMode: !state.avatar.avatarMode }
-  })),
+  toggleAvatarMode: () => {
+    set((state) => ({
+      avatar: { ...state.avatar, avatarMode: !state.avatar.avatarMode }
+    } as Partial<AppStore>));
+  },
 
-  resetAvatar: () => set((state) => ({
-    avatar: {
-      ...state.avatar,
-      avatarMode: false,
-      isListening: false
-    }
-  })),
+  resetAvatar: () => {
+    set((state) => ({
+      avatar: {
+        ...state.avatar,
+        avatarMode: false,
+        isListening: false
+      }
+    } as Partial<AppStore>));
+  },
 });
 

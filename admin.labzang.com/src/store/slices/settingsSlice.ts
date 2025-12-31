@@ -27,12 +27,16 @@ export const createSettingsSlice: StateCreator<
   settingsView: 'home',
 
   // 액션
-  setSettingsView: (view) => set((state) => ({
-    settings: { ...state.settings, settingsView: view }
-  })),
+  setSettingsView: (view) => {
+    set((state) => ({
+      settings: { ...(state as any).settings, settingsView: view }
+    } as Partial<AppStore>));
+  },
   
-  resetSettingsView: () => set((state) => ({
-    settings: { ...state.settings, settingsView: 'home' }
-  })),
+  resetSettingsView: () => {
+    set((state) => ({
+      settings: { ...(state as any).settings, settingsView: 'home' }
+    } as Partial<AppStore>));
+  },
 });
 

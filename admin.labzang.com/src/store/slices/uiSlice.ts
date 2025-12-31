@@ -33,20 +33,30 @@ export const createUiSlice: StateCreator<
   isDragging: false,
 
   // 액션
-  setSidebarOpen: (open) => set((state) => ({ 
-    ui: { ...state.ui, sidebarOpen: open } 
-  })),
-  setDarkMode: (dark) => set((state) => ({ 
-    ui: { ...state.ui, darkMode: dark } 
-  })),
-  setIsDragging: (dragging) => set((state) => ({ 
-    ui: { ...state.ui, isDragging: dragging } 
-  })),
-  toggleSidebar: () => set((state) => ({ 
-    ui: { ...state.ui, sidebarOpen: !state.ui.sidebarOpen } 
-  })),
-  toggleDarkMode: () => set((state) => ({ 
-    ui: { ...state.ui, darkMode: !state.ui.darkMode } 
-  })),
+  setSidebarOpen: (open) => {
+    set((state) => ({ 
+      ui: { ...state.ui, sidebarOpen: open } 
+    } as Partial<AppStore>));
+  },
+  setDarkMode: (dark) => {
+    set((state) => ({ 
+      ui: { ...state.ui, darkMode: dark } 
+    } as Partial<AppStore>));
+  },
+  setIsDragging: (dragging) => {
+    set((state) => ({ 
+      ui: { ...state.ui, isDragging: dragging } 
+    } as Partial<AppStore>));
+  },
+  toggleSidebar: () => {
+    set((state) => ({ 
+      ui: { ...state.ui, sidebarOpen: !state.ui.sidebarOpen } 
+    } as Partial<AppStore>));
+  },
+  toggleDarkMode: () => {
+    set((state) => ({ 
+      ui: { ...state.ui, darkMode: !state.ui.darkMode } 
+    } as Partial<AppStore>));
+  },
 });
 

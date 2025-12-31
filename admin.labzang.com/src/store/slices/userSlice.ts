@@ -36,21 +36,25 @@ export const createUserSlice: StateCreator<
   isLoggedIn: false,
 
   // Actions
-  setUser: (user) => set((state) => ({ 
-    user: { 
-      ...state.user,
-      user: user, 
-      isLoggedIn: true 
-    } 
-  })),
+  setUser: (user) => {
+    set((state) => ({ 
+      user: { 
+        ...state.user,
+        user: user, 
+        isLoggedIn: true 
+      } 
+    } as Partial<AppStore>));
+  },
   
-  clearUser: () => set((state) => ({ 
-    user: { 
-      ...state.user,
-      user: null, 
-      isLoggedIn: false 
-    } 
-  })),
+  clearUser: () => {
+    set((state) => ({ 
+      user: { 
+        ...state.user,
+        user: null, 
+        isLoggedIn: false 
+      } 
+    } as Partial<AppStore>));
+  },
   
   login: (userInfo) => {
     console.log('[userSlice] login 호출됨:', userInfo);
@@ -60,7 +64,7 @@ export const createUserSlice: StateCreator<
         user: userInfo, 
         isLoggedIn: true 
       } 
-    }));
+    } as Partial<AppStore>));
     console.log('[userSlice] login 완료 - isLoggedIn: true');
   },
   
@@ -81,7 +85,7 @@ export const createUserSlice: StateCreator<
     // 먼저 Zustand 상태 초기화 (백엔드 users 테이블에는 영향 없음)
     set((state) => ({ 
       user: { ...state.user, user: null, isLoggedIn: false } 
-    }));
+    } as Partial<AppStore>));
     console.log('[userSlice] Zustand 상태 초기화 완료');
     
     // localStorage에서 토큰 및 persist된 상태 삭제 (클라이언트 측만 정리)
