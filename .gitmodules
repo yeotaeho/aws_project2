@@ -1,0 +1,3 @@
+[submodule "yolo"]
+	path = yolo
+	url = https://github.com/yeotaeho/aws_yolo2.git
