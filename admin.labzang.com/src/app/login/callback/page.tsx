@@ -79,7 +79,7 @@ function OAuthCallbackContent() {
             // 로그인 상태 업데이트
             if (login) {
               login({
-                id: parsedUserId,
+                id: parsedUserId ?? undefined, // null을 undefined로 변환
                 name: nickname,
                 email: email || `${provider}@example.com`,
               });
