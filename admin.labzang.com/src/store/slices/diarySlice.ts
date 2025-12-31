@@ -27,12 +27,16 @@ export const createDiarySlice: StateCreator<
   diaryView: 'home',
 
   // 액션
-  setDiaryView: (view) => set((state) => ({
-    diary: { ...state.diary, diaryView: view }
-  })),
+  setDiaryView: (view) => {
+    set((state) => ({
+      diary: { ...(state as any).diary, diaryView: view }
+    } as Partial<AppStore>));
+  },
   
-  resetDiaryView: () => set((state) => ({
-    diary: { ...state.diary, diaryView: 'home' }
-  })),
+  resetDiaryView: () => {
+    set((state) => ({
+      diary: { ...(state as any).diary, diaryView: 'home' }
+    } as Partial<AppStore>));
+  },
 });
 
