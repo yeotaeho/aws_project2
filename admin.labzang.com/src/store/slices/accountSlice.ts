@@ -27,12 +27,16 @@ export const createAccountSlice: StateCreator<
   accountView: 'home',
 
   // 액션
-  setAccountView: (view) => set((state) => ({
-    account: { ...state.account, accountView: view }
-  })),
+  setAccountView: (view) => {
+    set((state) => ({
+      account: { ...(state as any).account, accountView: view }
+    } as Partial<AppStore>));
+  },
   
-  resetAccountView: () => set((state) => ({
-    account: { ...state.account, accountView: 'home' }
-  })),
+  resetAccountView: () => {
+    set((state) => ({
+      account: { ...(state as any).account, accountView: 'home' }
+    } as Partial<AppStore>));
+  },
 });
 
