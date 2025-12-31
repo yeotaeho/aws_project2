@@ -133,11 +133,12 @@ export function ExampleCalendarUsage() {
 export function ExampleInteractionUsage() {
   const inputText = useAppStore((state) => state.interaction.inputText);
   const interactions = useAppStore((state) => state.interaction.interactions);
-  const currentCategory = useAppStore((state) => state.interaction.currentCategory);
+  const loading = useAppStore((state) => state.interaction.loading);
   
   const setInputText = useAppStore((state) => state.interaction.setInputText);
-  const setCurrentCategory = useAppStore((state) => state.interaction.setCurrentCategory);
+  const setLoading = useAppStore((state) => state.interaction.setLoading);
   const addInteraction = useAppStore((state) => state.interaction.addInteraction);
+  const clearInteractions = useAppStore((state) => state.interaction.clearInteractions);
   
   return (
     <div>
@@ -146,8 +147,9 @@ export function ExampleInteractionUsage() {
         onChange={(e) => setInputText(e.target.value)}
         placeholder="프롬프트 입력"
       />
-      <p>현재 카테고리: {currentCategory}</p>
+      {loading && <p>로딩 중...</p>}
       <p>대화 기록: {interactions.length}개</p>
+      <button onClick={clearInteractions}>대화 기록 초기화</button>
     </div>
   );
 }
