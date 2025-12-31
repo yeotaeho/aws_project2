@@ -55,6 +55,8 @@ export type DiaryView = 'home' | 'write' | 'list' | 'detail' | 'analysis';
 
 export type HealthView = 'home' | 'exercise' | 'health' | 'records' | 'scan' | 'exercise-detail';
 
+export type PathfinderView = 'home' | 'learning' | 'new-learning' | 'career' | 'roadmap';
+
 // Web Speech API 타입 정의
 export interface SpeechRecognition extends EventTarget {
   continuous: boolean;
