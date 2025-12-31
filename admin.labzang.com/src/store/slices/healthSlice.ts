@@ -27,12 +27,16 @@ export const createHealthSlice: StateCreator<
   healthView: 'home',
 
   // 액션
-  setHealthView: (view) => set((state) => ({
-    health: { ...state.health, healthView: view }
-  })),
+  setHealthView: (view) => {
+    set((state) => ({
+      health: { ...(state as any).health, healthView: view }
+    } as Partial<AppStore>));
+  },
   
-  resetHealthView: () => set((state) => ({
-    health: { ...state.health, healthView: 'home' }
-  })),
+  resetHealthView: () => {
+    set((state) => ({
+      health: { ...(state as any).health, healthView: 'home' }
+    } as Partial<AppStore>));
+  },
 });
 
