@@ -70,7 +70,9 @@ export function ExampleSoccerUsage() {
 // ============================================
 // 예시 3: 일기 (Diary) 슬라이스 사용
 // ============================================
-
+// 주의: diary 슬라이스는 현재 AppStore에 포함되지 않았습니다.
+// AppStore에 diary 필드를 추가하고 index.ts에서 createDiarySlice를 사용해야 합니다.
+/*
 export function ExampleDiaryUsage() {
   const diaryView = useAppStore((state) => state.diary.diaryView);
   const setDiaryView = useAppStore((state) => state.diary.setDiaryView);
@@ -85,11 +87,14 @@ export function ExampleDiaryUsage() {
     </div>
   );
 }
+*/
 
 // ============================================
 // 예시 4: 캘린더 (Calendar) 슬라이스 사용
 // ============================================
-
+// 주의: calendar 슬라이스는 현재 AppStore에 포함되지 않았습니다.
+// AppStore에 calendar 필드를 추가하고 index.ts에서 createCalendarSlice를 사용해야 합니다.
+/*
 export function ExampleCalendarUsage() {
   const events = useAppStore((state) => state.calendar.events);
   const todayTasks = useAppStore((state) => state.calendar.todayTasks);
@@ -119,6 +124,7 @@ export function ExampleCalendarUsage() {
     </div>
   );
 }
+*/
 
 // ============================================
 // 예시 5: 인터랙션 (Interaction) 슬라이스 사용
@@ -178,23 +184,23 @@ export function ExampleMultipleSlices() {
   // 여러 슬라이스에서 상태 가져오기
   const darkMode = useAppStore((state) => state.ui.darkMode);
   const searchResults = useAppStore((state) => state.soccer.searchResults);
-  const diaryView = useAppStore((state) => state.diary.diaryView);
-  const events = useAppStore((state) => state.calendar.events);
+  // const diaryView = useAppStore((state) => state.diary.diaryView); // diary는 AppStore에 없음
+  // const events = useAppStore((state) => state.calendar.events); // calendar는 AppStore에 없음
   
   // 여러 액션 가져오기
   const toggleDarkMode = useAppStore((state) => state.ui.toggleDarkMode);
   const searchSoccer = useAppStore((state) => state.soccer.searchSoccer);
-  const setDiaryView = useAppStore((state) => state.diary.setDiaryView);
+  // const setDiaryView = useAppStore((state) => state.diary.setDiaryView); // diary는 AppStore에 없음
   
   return (
     <div className={darkMode ? 'dark' : ''}>
       <button onClick={toggleDarkMode}>다크모드 토글</button>
       <button onClick={() => searchSoccer("축구")}>축구 검색</button>
-      <button onClick={() => setDiaryView('write')}>일기 쓰기</button>
+      {/* <button onClick={() => setDiaryView('write')}>일기 쓰기</button> */}
       {searchResults != null && (
         <div>검색 결과 있음</div>
       )}
-      <p>일정: {events.length}개</p>
+      {/* <p>일정: {events.length}개</p> */}
     </div>
   );
 }
