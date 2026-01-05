@@ -164,6 +164,15 @@ function DashboardContent() {
         initialize();
     }, [router, searchParams]);
 
+    // 로그아웃 핸들러
+    const handleLogout = () => {
+        // localStorage에서 토큰 제거
+        localStorage.removeItem('access_token');
+        console.log('✅ 로그아웃: 토큰이 삭제되었습니다.');
+        // 로그인 페이지로 리다이렉트
+        router.push('/login');
+    };
+
     // 로딩 중
     if (isLoading) {
         return (
@@ -214,6 +223,12 @@ function DashboardContent() {
                                 {userInfo?.name || userInfo?.nickname ? `${userInfo.name || userInfo.nickname}님, ` : ''}환영합니다
                             </p>
                         </div>
+                        <button
+                            onClick={handleLogout}
+                            className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-colors"
+                        >
+                            로그아웃
+                        </button>
                     </div>
                 </div>
             </div>

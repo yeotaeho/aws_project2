@@ -19,7 +19,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onLogin }) => {
       console.log(`${provider} 로그인 시작`);
       
       // 백엔드에서 인증 URL 가져오기
-      const response = await fetch(`http://localhost:8080/auth/${provider}/auth-url`);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_GATEWAY_URL}/auth/${provider}/auth-url`);
       const data = await response.json();
       
       if (data.success && data.auth_url) {

@@ -102,7 +102,7 @@ services:
   # ========================================================================
   mlservice:
     build:
-      context: ./ai.labzang.com/mlservice
+      context: ./mlservice.labzang.com
       dockerfile: Dockerfile
     container_name: mlservice
     ports:
@@ -138,50 +138,13 @@ services:
 
   vision:
     build:
-      context: ./ai.labzang.com/vision
+      context: ./vision.labzang.com
       dockerfile: Dockerfile
     container_name: vision
     ports:
       - "9020:9020"
     networks:
       - labzang-network
-    environment:
-      - DATABASE_URL=${DATABASE_URL}
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=${DB_PORT}
-      - DB_NAME=${DB_NAME}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - UPSTASH_REDIS_URL=${UPSTASH_REDIS_URL}
-      - UPSTASH_REDIS_HOST=${UPSTASH_REDIS_HOST}
-      - UPSTASH_REDIS_PORT=${UPSTASH_REDIS_PORT}
-      - UPSTASH_REDIS_PASSWORD=${UPSTASH_REDIS_PASSWORD}
-      - REDIS_URL=${UPSTASH_REDIS_URL}
-      - REDIS_HOST=${UPSTASH_REDIS_HOST}
-      - REDIS_PORT=${UPSTASH_REDIS_PORT}
-      - REDIS_PASSWORD=${UPSTASH_REDIS_PASSWORD}
-      - REDIS_SSL_ENABLED=true
-      - PYTHONUNBUFFERED=1
-      - PYTHONDONTWRITEBYTECODE=1
-    env_file:
-      - .env
-    profiles:
-      - ai
-    restart: on-failure
-
-  yolo:
-    build:
-      context: ./ai.labzang.com/yolo
-      dockerfile: Dockerfile
-    container_name: yolo
-    ports:
-      - "9030:9030"
-    networks:
-      - labzang-network
-    volumes:
-      # 업로드된 이미지와 디텍션 결과를 호스트와 공유
-      - ./ai.labzang.com/yolo/app/yolo:/api/app/yolo
-      - ./ai.labzang.com/yolo/app/data/yolo:/api/app/data/yolo
     environment:
       - DATABASE_URL=${DATABASE_URL}
       - DB_HOST=${DB_HOST}
