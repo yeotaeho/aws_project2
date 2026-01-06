@@ -68,11 +68,11 @@ function KakaoCallbackContent() {
           }
 
           setStatus('success');
-          setMessage('로그인 성공! 대시보드로 이동합니다...');
+          setMessage('로그인 성공! 채팅 페이지로 이동합니다...');
 
-          // 대시보드로 리다이렉트
+          // 채팅 페이지로 리다이렉트
           setTimeout(() => {
-            router.push('/dashboard');
+            window.location.href = 'https://chat.yeotaeho.kr/';
           }, 1000);
         } else {
           throw new Error(data.message || '토큰 교환 실패');

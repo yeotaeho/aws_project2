@@ -31,8 +31,8 @@ function HomeContent() {
       import('@/lib/api/client').then(({ setTokens }) => {
         setTokens(token, refreshToken || undefined, 900); // 15분
         console.log('[Home] Access Token 메모리 저장 완료');
-        // URL에서 토큰 제거 (히스토리에 남지 않도록)
-        router.replace('/');
+        // 로그인 성공 후 채팅 페이지로 리다이렉트
+        window.location.href = 'https://chat.yeotaeho.kr/';
       });
     }
   }, [searchParams, router]);
