@@ -22,17 +22,23 @@ function HomeContent() {
     const refreshToken = searchParams.get('refresh_token');
     const error = searchParams.get('error');
 
+    console.log('[Home] URL 파라미터 확인:', { token: token ? '있음' : '없음', error });
+
     if (error) {
       console.error('로그인 오류:', error);
       // 에러 메시지 표시 가능
     } else if (token) {
+      console.log('[Home] 토큰 수신, Zustand에 저장 중...');
       // Access Token만 Zustand 메모리에 저장 (XSS 공격 방지)
       // Refresh Token은 백엔드에서 HttpOnly 쿠키로 설정됨 (자동 관리)
       import('@/lib/api/client').then(({ setTokens }) => {
         setTokens(token, refreshToken || undefined, 900); // 15분
         console.log('[Home] Access Token 메모리 저장 완료');
+        console.log('[Home] 채팅 페이지로 리다이렉트 시작: https://chat.yeotaeho.kr/');
         // 로그인 성공 후 채팅 페이지로 리다이렉트
         window.location.href = 'https://chat.yeotaeho.kr/';
+      }).catch((err) => {
+        console.error('[Home] 토큰 저장 실패:', err);
       });
     }
   }, [searchParams, router]);
