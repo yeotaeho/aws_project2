@@ -29,9 +29,10 @@ function DashboardContent() {
                 }
 
                 if (tokenFromUrl) {
-                    // 토큰을 localStorage에 저장
-                    localStorage.setItem('access_token', tokenFromUrl);
-                    console.log('✅ 토큰 저장 성공:', tokenFromUrl.substring(0, 20) + '...');
+                    // 토큰을 메모리에 저장 (XSS 공격 방지)
+                    const { setTokens } = await import('@/lib/api/client');
+                    setTokens(tokenFromUrl, undefined, 900); // 15분
+                    console.log('✅ 토큰 메모리 저장 성공:', tokenFromUrl.substring(0, 20) + '...');
                     console.log('✅ 소셜 로그인 성공! 토큰이 정상적으로 받아졌습니다.');
 
                     // 로그인 성공 상태 설정
@@ -43,8 +44,9 @@ function DashboardContent() {
                     return;
                 }
 
-                // 2. localStorage에서 토큰 가져오기
-                const token = localStorage.getItem('access_token');
+                // 2. 메모리에서 토큰 가져오기
+                const { getAccessToken } = await import('@/lib/api/client');
+                const token = getAccessToken();
 
                 if (!token) {
                     // 토큰이 없으면 로그인 페이지로 이동

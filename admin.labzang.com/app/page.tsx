@@ -38,21 +38,23 @@ function HomeContent() {
       alert(`인증 오류 발생\n\n에러: ${error}\n${errorCode ? `코드: ${errorCode}\n` : ''}${errorMessage ? `상세: ${errorMessage}` : ''}`);
     }
 
-    // 토큰이 있는 경우 저장
+    // 토큰이 있는 경우 메모리에 저장
     if (token) {
-      localStorage.setItem('access_token', token);
-      if (refreshToken) {
-        localStorage.setItem('refresh_token', refreshToken);
-      }
-      console.log('✅ 토큰 저장 완료');
-      // 대시보드로 리다이렉트
-      router.push('/dashboard');
+      // 동적 import로 tokenStore 가져오기 (클라이언트 사이드에서만 실행)
+      import('@/lib/api/client').then(({ setTokens }) => {
+        setTokens(token, refreshToken || undefined, 900); // 15분
+        console.log('✅ 토큰 메모리 저장 완료');
+        // 대시보드로 리다이렉트
+        router.push('/dashboard');
+      });
       return;
     }
 
-    // 토큰 확인
-    const storedToken = localStorage.getItem('access_token');
-    setIsAuthenticated(!!storedToken);
+    // 토큰 확인 (메모리에서)
+    import('@/lib/api/client').then(({ getAccessToken }) => {
+      const storedToken = getAccessToken();
+      setIsAuthenticated(!!storedToken);
+    });
   }, [searchParams, router]);
 
   // 로딩 중

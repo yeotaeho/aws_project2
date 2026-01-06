@@ -74,9 +74,10 @@ export const createSocialLoginHandlers = (() => {
 
             if (response.ok) {
                 const data = await response.json();
-                // 토큰이 응답에 포함되어 있다면 저장
+                // 토큰이 응답에 포함되어 있다면 메모리에 저장
                 if (data.access_token) {
-                    localStorage.setItem('access_token', data.access_token);
+                    const { setTokens } = await import('@/lib/api/client');
+                    setTokens(data.access_token, data.refresh_token, 900); // 15분
                 }
                 onSuccess();
             } else {
@@ -134,15 +135,17 @@ export const createSocialLoginHandlers = (() => {
                 }
             }
 
-            // 로그아웃 API가 구현되지 않았으므로 항상 로컬 토큰 제거 후 성공 처리
+            // 로그아웃 API가 구현되지 않았으므로 항상 메모리 토큰 제거 후 성공 처리
             // (서버 로그아웃 실패해도 클라이언트에서는 로그아웃 처리)
-            console.info('ℹ️ 로그아웃 처리 완료, 로컬 토큰 제거합니다.');
-            localStorage.removeItem('access_token');
+            console.info('ℹ️ 로그아웃 처리 완료, 메모리 토큰 제거합니다.');
+            const { clearTokens } = await import('@/lib/api/client');
+            clearTokens();
             onSuccess(); // 로그인 페이지로 이동
         } catch (err) {
-            // 예상치 못한 에러 발생 시에도 로컬 토큰 제거 후 성공 처리
+            // 예상치 못한 에러 발생 시에도 메모리 토큰 제거 후 성공 처리
             console.warn('⚠️ 로그아웃 처리 중 예상치 못한 오류:', err);
-            localStorage.removeItem('access_token');
+            const { clearTokens } = await import('@/lib/api/client');
+            clearTokens();
             // 에러가 발생해도 로그인 페이지로 이동은 유지 (사용자 경험 우선)
             onSuccess(); // 로그인 페이지로 이동
             // onError는 호출하지 않음 (에러 페이지 표시 방지)
@@ -178,10 +181,12 @@ export const createSocialLoginHandlers = (() => {
         }
 
         // 로그아웃 핸들러 (이너 함수 - 함수 선언식)
-        function handleLogoutRequest(onSuccess: () => void, onError?: (error: string) => void) {
-            const token = localStorage.getItem('access_token');
+        async function handleLogoutRequest(onSuccess: () => void, onError?: (error: string) => void) {
+            const { getAccessToken, clearTokens } = await import('@/lib/api/client');
+            const token = getAccessToken();
             if (!token) {
                 // 토큰이 없으면 바로 성공 처리 (이미 로그아웃된 상태)
+                clearTokens(); // 혹시 남아있을 수 있는 토큰 정리
                 onSuccess();
                 return;
             }

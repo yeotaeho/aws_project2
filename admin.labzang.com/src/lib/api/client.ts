@@ -6,6 +6,7 @@
  */
 
 import { AI_GATEWAY_CONFIG } from '../constants/endpoints';
+import { tokenStore } from '../auth/tokenStore';
 
 const REQUEST_TIMEOUT = 30000;
 const MAX_RETRIES = 2;
@@ -174,6 +175,62 @@ export async function fetchWithRetry(
 }
 
 /**
+ * 메모리에서 JWT Access Token 가져오기
+ * XSS 공격으로부터 보호하기 위해 localStorage 대신 메모리 사용
+ */
+export function getAccessToken(): string | null {
+  if (typeof window === 'undefined') return null;
+  return tokenStore.getAccessToken();
+}
+
+/**
+ * 메모리에서 Refresh Token 가져오기
+ */
+export function getRefreshToken(): string | null {
+  if (typeof window === 'undefined') return null;
+  return tokenStore.getRefreshToken();
+}
+
+/**
+ * JWT 토큰을 메모리에 저장
+ * Access Token: 메모리에만 저장 (페이지 새로고침 시 사라짐)
+ * Refresh Token: 메모리에 저장 (향후 HttpOnly 쿠키로 이동 권장)
+ * 
+ * @param accessToken - JWT Access Token
+ * @param refreshToken - JWT Refresh Token (선택)
+ * @param expiresIn - Access Token 만료 시간(초), 기본값 900초(15분)
+ */
+export function setTokens(accessToken: string, refreshToken?: string, expiresIn?: number): void {
+  if (typeof window === 'undefined') return;
+  
+  tokenStore.setAccessToken(accessToken, expiresIn);
+  if (refreshToken) {
+    tokenStore.setRefreshToken(refreshToken);
+  }
+  
+  console.log('[API Client] 토큰 메모리 저장 완료');
+}
+
+/**
+ * JWT 토큰 삭제 (메모리에서 제거)
+ */
+export function clearTokens(): void {
+  if (typeof window === 'undefined') return;
+  tokenStore.clearTokens();
+  
+  // 기존 localStorage에 남아있을 수 있는 토큰도 삭제 (마이그레이션)
+  try {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    localStorage.removeItem('auth_provider');
+  } catch (e) {
+    // localStorage 접근 실패 시 무시
+  }
+  
+  console.log('[API Client] 토큰 삭제 완료');
+}
+
+/**
  * Gateway를 통한 백엔드 API 호출
  * 
  * @param endpoint - API 엔드포인트 (예: "/api/agent1")
@@ -181,42 +238,6 @@ export async function fetchWithRetry(
  * @param options - 추가 fetch 옵션
  * @returns Promise<Response>
  */
-/**
- * localStorage에서 JWT 토큰 가져오기
- */
-export function getAccessToken(): string | null {
-  if (typeof window === 'undefined') return null;
-  return localStorage.getItem('access_token');
-}
-
-/**
- * localStorage에서 Refresh 토큰 가져오기
- */
-export function getRefreshToken(): string | null {
-  if (typeof window === 'undefined') return null;
-  return localStorage.getItem('refresh_token');
-}
-
-/**
- * JWT 토큰 저장
- */
-export function setTokens(accessToken: string, refreshToken?: string): void {
-  if (typeof window === 'undefined') return;
-  localStorage.setItem('access_token', accessToken);
-  if (refreshToken) {
-    localStorage.setItem('refresh_token', refreshToken);
-  }
-}
-
-/**
- * JWT 토큰 삭제
- */
-export function clearTokens(): void {
-  if (typeof window === 'undefined') return;
-  localStorage.removeItem('access_token');
-  localStorage.removeItem('refresh_token');
-  localStorage.removeItem('auth_provider');
-}
 
 export async function fetchFromGateway(
   endpoint: string,
