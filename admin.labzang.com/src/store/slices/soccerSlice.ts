@@ -37,7 +37,7 @@ export const createSoccerSlice: StateCreator<
     set({ soccer: { ...get().soccer, isLoading: true, error: null } });
     
     try {
-      const gatewayUrl = process.env.NEXT_PUBLIC_API_GATEWAY_URL || 
+      const gatewayUrl = process.env.NEXT_PUBLIC_GATEWAY_URL || 
                         process.env.NEXT_PUBLIC_API_BASE_URL || 
                         'http://localhost:8080';
       

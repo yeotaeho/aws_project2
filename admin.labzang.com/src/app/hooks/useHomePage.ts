@@ -367,7 +367,7 @@ export const useHomePage = () => {
         console.log('[useHomePage] ⚽ 축구 관련 검색어 감지:', submitText);
         
         // Gateway를 통한 API 호출
-        const gatewayUrl = process.env.NEXT_PUBLIC_API_GATEWAY_URL || 
+        const gatewayUrl = process.env.NEXT_PUBLIC_GATEWAY_URL || 
                           process.env.NEXT_PUBLIC_API_BASE_URL || 
                           'http://localhost:8080';
         

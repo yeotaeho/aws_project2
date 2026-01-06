@@ -11,7 +11,7 @@
 export const { handleGoogleLogin, handleKakaoLogin, handleNaverLogin } = (() => {
     // 외부 스코프 - 공통 설정 및 변수
     // 환경 변수에서 가져오거나 기본값 사용 (프로덕션에서는 환경 변수 설정 필요)
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
+    const baseUrl = process.env.NEXT_PUBLIC_GATEWAY_URL || 'http://localhost:8080';
 
     /**
      * 구글 로그인 핸들러 (이너 함수)

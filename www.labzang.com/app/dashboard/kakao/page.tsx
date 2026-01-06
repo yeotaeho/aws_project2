@@ -23,26 +23,32 @@ export default function Dashboard() {
         if (storedUser) {
             try {
                 setUser(JSON.parse(storedUser));
+                setLoading(false);
             } catch (err) {
                 console.error('사용자 정보 파싱 실패:', err);
+                setLoading(false);
             }
         } else {
-            // 토큰이 있으면 사용자 정보 조회
-            const accessToken = localStorage.getItem('access_token');
-            if (accessToken) {
-                fetchUserInfo(accessToken);
-            } else {
-                // 토큰이 없으면 로그인 페이지로 리다이렉트
-                router.push('/');
-            }
+            // Zustand에서 토큰 가져오기
+            import('@/lib/api/client').then(({ getAccessToken }) => {
+                const accessToken = getAccessToken();
+                if (accessToken) {
+                    fetchUserInfo(accessToken);
+                } else {
+                    // 토큰이 없으면 로그인 페이지로 리다이렉트
+                    router.push('/');
+                    setLoading(false);
+                }
+            });
         }
-        setLoading(false);
     }, [router]);
 
     const fetchUserInfo = async (accessToken: string) => {
         try {
-            const response = await fetch('http://localhost:8080/oauth2/kakao/user', {
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
+            const response = await fetch(`${baseUrl}/kakao/user`, {
                 method: 'GET',
+                credentials: 'include', // HttpOnly 쿠키 포함
                 headers: {
                     'Authorization': `Bearer ${accessToken}`,
                 },
@@ -52,6 +58,7 @@ export default function Dashboard() {
 
             if (data.success && data.user) {
                 setUser(data.user);
+                // 사용자 정보는 localStorage에 저장 (민감하지 않은 정보)
                 localStorage.setItem('user', JSON.stringify(data.user));
             } else {
                 throw new Error(data.message || '사용자 정보 조회 실패');
@@ -60,13 +67,17 @@ export default function Dashboard() {
             console.error('사용자 정보 조회 실패:', err);
             // 토큰이 유효하지 않으면 로그인 페이지로 리다이렉트
             router.push('/');
+        } finally {
+            setLoading(false);
         }
     };
 
-    const handleLogout = () => {
-        // 토큰 및 사용자 정보 삭제
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');
+    const handleLogout = async () => {
+        // Zustand에서 토큰 제거
+        const { clearTokens } = await import('@/lib/api/client');
+        clearTokens();
+
+        // 사용자 정보도 제거
         localStorage.removeItem('user');
         // 로그인 페이지로 리다이렉트
         router.push('/');

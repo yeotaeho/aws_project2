@@ -10,9 +10,9 @@ export default function ContactPage() {
   const [heatmapLoading, setHeatmapLoading] = useState(true);
   const [heatmapError, setHeatmapError] = useState<string | null>(null);
 
-  const usaMapUrl = 'http://localhost:8080/api/ml/usa/map';
-  const krMapUrl = 'http://localhost:8080/api/ml/kr/map';
-  const heatmapUrl = 'http://localhost:8080/api/ml/kr/heatmap';
+  const usaMapUrl = process.env.NEXT_PUBLIC_GATEWAY_URL+'/ml/usa/map';
+  const krMapUrl = process.env.NEXT_PUBLIC_GATEWAY_URL+'/ml/kr/map';
+  const heatmapUrl = process.env.NEXT_PUBLIC_GATEWAY_URL+'/ml/kr/heatmap';
 
   const handleUsaIframeLoad = () => {
     setUsaLoading(false);

@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
     '/login',                 // @RequestMapping("/") + @PostMapping("/login")
   ];
 
-  const baseUrl = 'http://localhost:8080';
+  const baseUrl = process.env.NEXT_PUBLIC_GATEWAY_URL;
   
   try {
     // 요청 본문 가져오기

@@ -15,33 +15,37 @@ export default function Dashboard() {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        // 토큰 확인
-        const token = localStorage.getItem('access_token');
+        // Zustand에서 토큰 확인
+        import('@/lib/api/client').then(({ getAccessToken }) => {
+            const token = getAccessToken();
 
-        if (!token) {
-            // 토큰이 없으면 로그인 페이지로 리다이렉트
-            router.push('/');
-            return;
-        }
-
-        // 사용자 정보 가져오기
-        const userString = localStorage.getItem('user');
-        if (userString) {
-            try {
-                const userData = JSON.parse(userString);
-                setUser(userData);
-            } catch (error) {
-                console.error('사용자 정보 파싱 실패:', error);
+            if (!token) {
+                // 토큰이 없으면 로그인 페이지로 리다이렉트
+                router.push('/');
+                return;
             }
-        }
 
-        setIsLoading(false);
+            // 사용자 정보 가져오기 (localStorage에 저장된 비민감 정보)
+            const userString = localStorage.getItem('user');
+            if (userString) {
+                try {
+                    const userData = JSON.parse(userString);
+                    setUser(userData);
+                } catch (error) {
+                    console.error('사용자 정보 파싱 실패:', error);
+                }
+            }
+
+            setIsLoading(false);
+        });
     }, [router]);
 
-    const handleLogout = () => {
-        // 로컬 스토리지에서 토큰 제거
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');
+    const handleLogout = async () => {
+        // Zustand에서 토큰 제거
+        const { clearTokens } = await import('@/lib/api/client');
+        clearTokens();
+
+        // 사용자 정보도 제거
         localStorage.removeItem('user');
 
         // 로그인 페이지로 리다이렉트

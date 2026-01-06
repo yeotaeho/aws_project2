@@ -38,7 +38,7 @@ function KakaoCallbackContent() {
 
       // 토큰 교환
       try {
-        const response = await fetch('http://localhost:8080/oauth2/kakao/token', {
+        const response = await fetch(process.env.NEXT_PUBLIC_GATEWAY_URL+'/oauth2/kakao/token', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -57,13 +57,12 @@ function KakaoCallbackContent() {
         console.log('토큰 교환 응답:', data);
 
         if (data.success && data.access_token) {
-          // 토큰 저장
-          localStorage.setItem('access_token', data.access_token);
-          if (data.refresh_token) {
-            localStorage.setItem('refresh_token', data.refresh_token);
-          }
+          // Access Token만 Zustand 메모리에 저장 (XSS 공격 방지)
+          // Refresh Token은 백엔드에서 HttpOnly 쿠키로 설정됨 (자동 관리)
+          const { setTokens } = await import('@/lib/api/client');
+          setTokens(data.access_token, data.refresh_token, 900); // 15분
 
-          // 사용자 정보 저장
+          // 사용자 정보는 localStorage에 저장 (민감하지 않은 정보)
           if (data.user) {
             localStorage.setItem('user', JSON.stringify(data.user));
           }
