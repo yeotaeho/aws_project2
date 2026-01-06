@@ -38,7 +38,7 @@ function KakaoCallbackContent() {
 
       // 토큰 교환
       try {
-        const response = await fetch(process.env.NEXT_PUBLIC_GATEWAY_URL+'/oauth2/kakao/token', {
+        const response = await fetch(process.env.NEXT_PUBLIC_GATEWAY_URL + '/oauth2/kakao/token', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

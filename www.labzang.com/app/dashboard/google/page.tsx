@@ -83,7 +83,7 @@ export default function Dashboard() {
 
     const handleExecute = async () => {
         try {
-            const response = await fetch(process.env.NEXT_PUBLIC_GATEWAY_URL+'/ai/titanic/dashboard/google', {
+            const response = await fetch(process.env.NEXT_PUBLIC_GATEWAY_URL + '/ai/titanic/dashboard/google', {
                 method: 'GET',
             });
 

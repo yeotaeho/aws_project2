@@ -4,12 +4,12 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 interface User {
-  kakao_id: string;
-  nickname: string;
-  email?: string;
-  email_verified?: boolean;
-  profile_image?: string;
-  provider: string;
+    kakao_id: string;
+    nickname: string;
+    email?: string;
+    email_verified?: boolean;
+    profile_image?: string;
+    provider: string;
 }
 
 export default function Dashboard() {
@@ -113,15 +113,15 @@ export default function Dashboard() {
                 <h1 className="text-4xl font-bold text-gray-900 text-center">
                     카카오 로그인 성공
                 </h1>
-                
+
                 {user.profile_image && (
-                    <img 
-                        src={user.profile_image} 
+                    <img
+                        src={user.profile_image}
                         alt={user.nickname}
                         className="w-24 h-24 rounded-full"
                     />
                 )}
-                
+
                 <div className="flex w-full flex-col gap-2 text-center">
                     <p className="text-xl font-semibold text-gray-900">{user.nickname}</p>
                     {user.email && (
