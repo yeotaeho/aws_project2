@@ -63,7 +63,7 @@ export async function loadCrimeData(): Promise<CrimeRecord[]> {
       complete: (results) => {
         resolve(results.data);
       },
-      error: (error) => {
+      error: (error: Error) => {
         reject(error);
       }
     });
