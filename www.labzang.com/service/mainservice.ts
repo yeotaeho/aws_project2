@@ -1,21 +1,28 @@
 /**
  * 메인 서비스 - 로그인 핸들러 함수들
  * 클로저 패턴을 사용하여 공통 설정을 외부 스코프에 유지하고 이너 함수로 핸들러를 정의
+ * 
+ * 백엔드 매핑:
+ * - GoogleController: @RequestMapping({ "/google", "/auth/google" }) + @GetMapping("/auth-url")
+ *   → /google/auth-url 또는 /auth/google/auth-url
+ * - KakaoController: @RequestMapping({ "/kakao", "/auth/kakao" }) + @GetMapping("/auth-url")
+ *   → /kakao/auth-url 또는 /auth/kakao/auth-url
  */
 export const { handleGoogleLogin, handleKakaoLogin, handleNaverLogin } = (() => {
     // 외부 스코프 - 공통 설정 및 변수
-    const baseUrl = 'http://localhost:8080';
-    const authPath = '/api/auth';
-    const oauth2Path = '/oauth2';
+    // 환경 변수에서 가져오거나 기본값 사용 (프로덕션에서는 환경 변수 설정 필요)
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
 
     /**
      * 구글 로그인 핸들러 (이너 함수)
-     * 백엔드 GET /api/auth/google/auth-url 엔드포인트로 연결
+     * 백엔드 GET /google/auth-url 또는 /auth/google/auth-url 엔드포인트로 연결
      * 백엔드 구조: 인증 URL 받기 → 구글 로그인 → 백엔드 콜백 처리 → 프론트엔드로 JWT 토큰 전달
      */
     async function handleGoogleLogin() {
         try {
-            const googleLoginUrl = `${baseUrl}${authPath}/google/auth-url`;
+            // GoogleController: @RequestMapping({ "/google", "/auth/google" }) + @GetMapping("/auth-url")
+            // /google/auth-url 사용 (더 짧은 경로)
+            const googleLoginUrl = `${baseUrl}/google/auth-url`;
 
             console.log("구글 로그인 요청 시작");
             console.log('구글 로그인 요청 URL:', googleLoginUrl);
@@ -23,6 +30,7 @@ export const { handleGoogleLogin, handleKakaoLogin, handleNaverLogin } = (() => 
             // GET 요청 (백엔드 @GetMapping("/auth-url")에 맞춤)
             const response = await fetch(googleLoginUrl, {
                 method: 'GET',
+                credentials: 'include', // 쿠키 포함 (HttpOnly Refresh Token)
                 headers: {
                     'Accept': 'application/json',
                 },
@@ -62,13 +70,28 @@ export const { handleGoogleLogin, handleKakaoLogin, handleNaverLogin } = (() => 
 
     /**
      * 카카오 로그인 핸들러 (이너 함수)
+     * 백엔드 GET /kakao/auth-url 또는 /auth/kakao/auth-url 엔드포인트로 연결
      */
     async function handleKakaoLogin() {
         // 카카오 로그인 시작: 인증 URL 가져오기
         try {
             // 프론트엔드 콜백 URL을 파라미터로 전달
             const frontendCallbackUrl = `${window.location.origin}/kakao-callback`;
-            const response = await fetch(`${baseUrl}${oauth2Path}/kakao/auth-url?redirect_uri=${encodeURIComponent(frontendCallbackUrl)}`);
+
+            // KakaoController: @RequestMapping({ "/kakao", "/auth/kakao" }) + @GetMapping("/auth-url")
+            // /kakao/auth-url 사용 (더 짧은 경로)
+            const kakaoAuthUrl = `${baseUrl}/kakao/auth-url?redirect_uri=${encodeURIComponent(frontendCallbackUrl)}`;
+
+            console.log("카카오 로그인 요청 시작");
+            console.log('카카오 로그인 요청 URL:', kakaoAuthUrl);
+
+            const response = await fetch(kakaoAuthUrl, {
+                method: 'GET',
+                credentials: 'include', // 쿠키 포함 (HttpOnly Refresh Token)
+                headers: {
+                    'Accept': 'application/json',
+                },
+            });
 
             // HTTP 응답 상태 확인
             if (!response.ok) {
