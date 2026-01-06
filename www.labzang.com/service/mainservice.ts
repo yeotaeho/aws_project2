@@ -71,16 +71,14 @@ export const { handleGoogleLogin, handleKakaoLogin, handleNaverLogin } = (() => 
     /**
      * 카카오 로그인 핸들러 (이너 함수)
      * 백엔드 GET /kakao/auth-url 또는 /auth/kakao/auth-url 엔드포인트로 연결
+     * 구글 로그인과 동일한 방식으로 redirect_uri는 백엔드에서 관리
      */
     async function handleKakaoLogin() {
         // 카카오 로그인 시작: 인증 URL 가져오기
         try {
-            // 프론트엔드 콜백 URL을 파라미터로 전달
-            const frontendCallbackUrl = `${window.location.origin}/kakao-callback`;
-
             // KakaoController: @RequestMapping({ "/kakao", "/auth/kakao" }) + @GetMapping("/auth-url")
-            // /kakao/auth-url 사용 (더 짧은 경로)
-            const kakaoAuthUrl = `${baseUrl}/kakao/auth-url?redirect_uri=${encodeURIComponent(frontendCallbackUrl)}`;
+            // /kakao/auth-url 사용 (구글과 동일하게 redirect_uri 파라미터 없음)
+            const kakaoAuthUrl = `${baseUrl}/kakao/auth-url`;
 
             console.log("카카오 로그인 요청 시작");
             console.log('카카오 로그인 요청 URL:', kakaoAuthUrl);
