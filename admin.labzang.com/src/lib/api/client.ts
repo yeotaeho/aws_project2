@@ -6,7 +6,7 @@
  */
 
 import { AI_GATEWAY_CONFIG } from '../constants/endpoints';
-import { tokenStore } from '../auth/tokenStore';
+import { useStore } from '@/store';
 
 const REQUEST_TIMEOUT = 30000;
 const MAX_RETRIES = 2;
@@ -176,47 +176,56 @@ export async function fetchWithRetry(
 
 /**
  * 메모리에서 JWT Access Token 가져오기
- * XSS 공격으로부터 보호하기 위해 localStorage 대신 메모리 사용
+ * XSS 공격으로부터 보호하기 위해 Zustand 메모리 저장소 사용
+ * persist 미들웨어에서 제외되어 localStorage에 저장되지 않음
  */
 export function getAccessToken(): string | null {
   if (typeof window === 'undefined') return null;
-  return tokenStore.getAccessToken();
+  return useStore.getState().token.getAccessToken();
 }
 
 /**
- * 메모리에서 Refresh Token 가져오기
+ * Refresh Token은 HttpOnly 쿠키에 저장되므로 JavaScript로 접근 불가
+ * 백엔드 API 호출 시 자동으로 쿠키에 포함됨 (credentials: 'include' 필요)
  */
 export function getRefreshToken(): string | null {
-  if (typeof window === 'undefined') return null;
-  return tokenStore.getRefreshToken();
+  // HttpOnly 쿠키는 JavaScript로 접근할 수 없음
+  // 이 함수는 호환성을 위해 유지하지만 항상 null 반환
+  console.warn('[API Client] Refresh Token은 HttpOnly 쿠키에 저장되어 JavaScript로 접근할 수 없습니다.');
+  return null;
 }
 
 /**
- * JWT 토큰을 메모리에 저장
+ * JWT Access Token을 Zustand 메모리에 저장
  * Access Token: 메모리에만 저장 (페이지 새로고침 시 사라짐)
- * Refresh Token: 메모리에 저장 (향후 HttpOnly 쿠키로 이동 권장)
+ * Refresh Token: HttpOnly 쿠키에 저장 (백엔드에서 설정, JavaScript 접근 불가)
+ * 
+ * 주의: persist 미들웨어에서 제외되어 localStorage에 저장되지 않음
  * 
  * @param accessToken - JWT Access Token
- * @param refreshToken - JWT Refresh Token (선택)
+ * @param refreshToken - 무시됨 (HttpOnly 쿠키에 저장되므로)
  * @param expiresIn - Access Token 만료 시간(초), 기본값 900초(15분)
  */
 export function setTokens(accessToken: string, refreshToken?: string, expiresIn?: number): void {
   if (typeof window === 'undefined') return;
   
-  tokenStore.setAccessToken(accessToken, expiresIn);
+  const tokenSlice = useStore.getState().token;
+  tokenSlice.setAccessToken(accessToken, expiresIn);
+  // Refresh Token은 HttpOnly 쿠키에 저장되므로 Zustand에서 관리하지 않음
   if (refreshToken) {
-    tokenStore.setRefreshToken(refreshToken);
+    console.log('[API Client] Refresh Token은 HttpOnly 쿠키에 저장됨 (백엔드에서 설정)');
   }
   
-  console.log('[API Client] 토큰 메모리 저장 완료');
+  console.log('[API Client] Access Token Zustand 메모리 저장 완료');
 }
 
 /**
- * JWT 토큰 삭제 (메모리에서 제거)
+ * JWT 토큰 삭제 (Zustand 메모리에서 제거)
  */
 export function clearTokens(): void {
   if (typeof window === 'undefined') return;
-  tokenStore.clearTokens();
+  
+  useStore.getState().token.clearTokens();
   
   // 기존 localStorage에 남아있을 수 있는 토큰도 삭제 (마이그레이션)
   try {
@@ -271,6 +280,7 @@ export async function fetchFromGateway(
   return fetchWithRetry(url, {
     method: 'GET',
     cache: 'no-store', // Next.js에서 fetch 캐싱 비활성화
+    credentials: 'include', // HttpOnly 쿠키(Refresh Token) 자동 포함
     ...options,
     // options에 이미 headers가 있으면 병합 (JWT 토큰 우선)
     headers: {
@@ -332,6 +342,7 @@ export async function fetchFromAIGateway(
   return fetchWithRetry(url, {
     method: options.method || 'GET',
     cache: 'no-store',
+    credentials: 'include', // HttpOnly 쿠키(Refresh Token) 자동 포함
     ...options,
     headers: {
       ...headers,

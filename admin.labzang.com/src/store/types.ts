@@ -18,6 +18,7 @@ export interface AppConfig {
 // 슬라이스 타입 import
 import { UiSlice } from "./slices/uiSlice";
 import { UserSlice } from "./slices/userSlice";
+import { TokenSlice } from "./slices/tokenSlice";
 import { SoccerSlice } from "./slices/soccerSlice";
 import { InteractionSlice } from "./slices/interactionSlice";
 import { AvatarSlice } from "./slices/avatarSlice";
@@ -30,6 +31,9 @@ export interface AppStore extends AppConfig {
   
   // 사용자 정보 슬라이스
   user: UserSlice;
+  
+  // 토큰 관리 슬라이스 (메모리 전용, persist 제외)
+  token: TokenSlice;
   
   // 인터랙션 & 프롬프트 슬라이스
   interaction: InteractionSlice;

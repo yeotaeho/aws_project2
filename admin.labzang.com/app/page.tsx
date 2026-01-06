@@ -42,8 +42,11 @@ function HomeContent() {
     if (token) {
       // 동적 import로 tokenStore 가져오기 (클라이언트 사이드에서만 실행)
       import('@/lib/api/client').then(({ setTokens }) => {
+        // Access Token만 Zustand에 저장
+        // Refresh Token은 백엔드에서 HttpOnly 쿠키로 설정됨 (자동 관리)
         setTokens(token, refreshToken || undefined, 900); // 15분
-        console.log('✅ 토큰 메모리 저장 완료');
+        console.log('✅ Access Token 메모리 저장 완료');
+        console.log('✅ Refresh Token은 HttpOnly 쿠키에 저장됨 (백엔드에서 설정)');
         // 대시보드로 리다이렉트
         router.push('/dashboard');
       });

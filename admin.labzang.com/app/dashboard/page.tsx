@@ -68,9 +68,10 @@ function DashboardContent() {
                 console.log('🔍 사용자 정보 조회 시작, 토큰:', token.substring(0, 20) + '...');
 
                 // 카카오 사용자 정보 조회 시도
+                // credentials: 'include'로 HttpOnly 쿠키(Refresh Token) 자동 포함
                 let response = await fetch(`${gatewayUrl}/auth/kakao/user`, {
                     method: 'GET',
-                    credentials: 'include',
+                    credentials: 'include', // HttpOnly 쿠키 자동 포함
                     headers: {
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json',
@@ -82,7 +83,7 @@ function DashboardContent() {
                     console.log('⚠️ 카카오 사용자 정보 조회 실패, 네이버 조회 시도...');
                     response = await fetch(`${gatewayUrl}/auth/naver/user`, {
                         method: 'GET',
-                        credentials: 'include',
+                        credentials: 'include', // HttpOnly 쿠키 자동 포함
                         headers: {
                             'Authorization': `Bearer ${token}`,
                             'Content-Type': 'application/json',
@@ -95,7 +96,7 @@ function DashboardContent() {
                     console.log('⚠️ 네이버 사용자 정보 조회 실패, 구글 조회 시도...');
                     response = await fetch(`${gatewayUrl}/auth/google/user`, {
                         method: 'GET',
-                        credentials: 'include',
+                        credentials: 'include', // HttpOnly 쿠키 자동 포함
                         headers: {
                             'Authorization': `Bearer ${token}`,
                             'Content-Type': 'application/json',
@@ -136,7 +137,8 @@ function DashboardContent() {
                     }
                 } else if (response.status === 401) {
                     console.error('❌ 인증 실패 (401)');
-                    localStorage.removeItem('access_token');
+                    const { clearTokens } = await import('@/lib/api/client');
+                    clearTokens();
                     setError('인증이 필요합니다.');
                     router.push('/login');
                 } else {
@@ -167,9 +169,10 @@ function DashboardContent() {
     }, [router, searchParams]);
 
     // 로그아웃 핸들러
-    const handleLogout = () => {
-        // localStorage에서 토큰 제거
-        localStorage.removeItem('access_token');
+    const handleLogout = async () => {
+        // 메모리에서 토큰 제거
+        const { clearTokens } = await import('@/lib/api/client');
+        clearTokens();
         console.log('✅ 로그아웃: 토큰이 삭제되었습니다.');
         // 로그인 페이지로 리다이렉트
         router.push('/login');

@@ -14,6 +14,7 @@ import { createSoccerSlice } from './slices/soccerSlice';
 import { createInteractionSlice } from './slices/interactionSlice';
 import { createAvatarSlice } from './slices/avatarSlice';
 import { createUserSlice } from './slices/userSlice';
+import { createTokenSlice } from './slices/tokenSlice';
 // 카테고리별 슬라이스 제거됨 (어드민 프론트엔드)
 
 export const useStore = create<AppStore>()(
@@ -25,6 +26,9 @@ export const useStore = create<AppStore>()(
         
         // 사용자 정보 슬라이스
         user: createUserSlice(...a),
+        
+        // 토큰 관리 슬라이스 (메모리 전용, persist 제외)
+        token: createTokenSlice(...a),
         
         // 인터랙션 & 프롬프트 슬라이스
         interaction: createInteractionSlice(...a),
@@ -48,6 +52,7 @@ export const useStore = create<AppStore>()(
           
           // 각 슬라이스의 reset 함수 호출
           const state = get();
+          state.token.clearTokens();
           state.interaction.clearInteractions();
           state.avatar.resetAvatar();
           state.soccer.clearResults();
@@ -85,6 +90,8 @@ export const useStore = create<AppStore>()(
             user: state.user?.user || null,
             isLoggedIn: state.user?.isLoggedIn || false,
           },
+          // 토큰은 persist에서 제외 (보안: XSS 공격 방지)
+          // token은 제외됨 - 메모리에만 저장
           // 카테고리별 상태 제거됨 (어드민 프론트엔드)
           // avatar, soccer는 제외 (임시 상태)
         }),
@@ -96,4 +103,14 @@ export const useStore = create<AppStore>()(
 
 // 기존 useAppStore와의 호환성을 위한 export
 export const useAppStore = useStore;
+
+// 개발 환경에서 디버깅용 (브라우저 콘솔에서 접근 가능)
+if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
+  (window as any).__tokenStore = {
+    getAccessToken: () => useStore.getState().token.getAccessToken(),
+    // Refresh Token은 HttpOnly 쿠키에 저장되어 JavaScript로 접근 불가
+    clearTokens: () => useStore.getState().token.clearTokens(),
+    isAccessTokenExpired: () => useStore.getState().token.isAccessTokenExpired(),
+  };
+}
 

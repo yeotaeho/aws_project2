@@ -50,14 +50,16 @@ function OAuthCallbackContent() {
 
         console.log('[OAuthCallback] JWT 토큰 수신:', { provider, tokenLength: token.length });
 
-        // JWT 토큰을 메모리에 저장 (XSS 공격 방지)
+        // Access Token만 Zustand 메모리에 저장 (XSS 공격 방지)
+        // Refresh Token은 백엔드에서 HttpOnly 쿠키로 설정됨 (자동 관리)
         const { setTokens } = await import('@/lib/api/client');
         setTokens(token, refreshToken || undefined, 900); // 15분
         
         // Provider 정보만 localStorage에 저장 (민감하지 않은 정보)
         localStorage.setItem('auth_provider', provider);
 
-        console.log('[OAuthCallback] 토큰 메모리 저장 완료');
+        console.log('[OAuthCallback] Access Token 메모리 저장 완료');
+        console.log('[OAuthCallback] Refresh Token은 HttpOnly 쿠키에 저장됨 (백엔드에서 설정)');
 
         // JWT 토큰에서 사용자 정보 추출 (간단한 파싱)
         // 실제로는 백엔드에 /user 정보 요청을 보내야 할 수도 있음
